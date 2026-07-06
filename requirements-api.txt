@@ -1,4 +1,4 @@
-boto3==1.43.36
+boto3==1.43.40
 cachetools==7.1.4
 connexion[swagger-ui]==3.3.0
 mangum==0.21.0

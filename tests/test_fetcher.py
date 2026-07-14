@@ -106,3 +106,18 @@ def test_copy_file(s3_stubber):
         service_response={},
     )
     fetcher.copy_file('myFilename', 'myId', 'myToken', 'myBucket', 'myOrbitType')
+
+
+@pytest.mark.network
+@pytest.mark.parametrize('orbit_type', ['AUX_POEORB', 'AUX_RESORB'])
+def test_get_cdse_orbits(orbit_type):
+    orbits = fetcher.get_cdse_orbits(orbit_type)
+
+    assert len(orbits)
+    assert all('filename' in orbit and 'id' in orbit for orbit in orbits)
+
+    # filename: S1A_OPER_AUX_POEORB_OPOD_20260122T070605_V20260101T225942_20260103T005942.EOF
+    assert all(orbit_type in orbit['filename'] for orbit in orbits)
+    assert all(orbit['filename'].endswith('.EOF') for orbit in orbits)
+    # id: 4e25c9ba-a0ad-42ac-94da-9c66228c413b
+    assert all(len(orbit['id']) == 36 for orbit in orbits)
